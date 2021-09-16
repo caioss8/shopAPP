@@ -33,7 +33,7 @@ class ProductItem extends StatelessWidget {
               },
               icon: Icon(
                   product.isFavorite ? Icons.favorite : Icons.favorite_border),
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
           title: Text(
@@ -45,7 +45,7 @@ class ProductItem extends StatelessWidget {
               cart.addItem(product);
             },
             icon: Icon(Icons.shopping_cart),
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).colorScheme.secondary,
           ),
         ),
       ),
