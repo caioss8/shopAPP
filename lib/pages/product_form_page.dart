@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:shop/models/product.dart';
+import 'package:provider/provider.dart';
+import 'package:shop/models/product_list.dart';
 
 class ProductFormPage extends StatefulWidget {
   const ProductFormPage({Key? key}) : super(key: key);
@@ -23,6 +22,15 @@ class _ProductFormPageState extends State<ProductFormPage> {
   void initState() {
     super.initState();
     _imageUrlFocus.addListener(updateImage);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_formData.isEmpty) {
+      final arg = ModalRoute.of(context)?.settings.arguments;
+    }
   }
 
   @override
@@ -52,14 +60,11 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
     _formKey.currentState?.save();
 
-    final newProduct = Product(
-      id: Random().nextDouble().toString(),
-      name: _formData['name'] as String,
-      description: _formData['name'] as String,
-      imageUrl: _formData['imageUrl'] as String,
-      price: _formData['price'] as double,
-    );
-    print(newProduct.name);
+    Provider.of<ProductList>(
+      context,
+      listen: false,
+    ).saveProduct(_formData);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -114,7 +119,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 validator: (_price) {
                   final priceString = _price ?? '-1';
                   final price = double.tryParse(priceString) ?? -1;
-
                   if (price <= 0) {
                     return 'Informe um preço valido!';
                   }
