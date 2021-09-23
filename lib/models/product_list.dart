@@ -27,7 +27,7 @@ class ProductList with ChangeNotifier {
     } else {
       addProduct(product);
     }
-    addProduct(product);
+    notifyListeners();
   }
 
   void addProduct(Product product) {
@@ -43,6 +43,14 @@ class ProductList with ChangeNotifier {
     int index = _items.indexWhere((p) => p.id == product.id);
     if (index >= 0) {
       _items[index] = product;
+      notifyListeners();
+    }
+  }
+
+  void deleteProduct(Product product) {
+    int index = _items.indexWhere((p) => p.id == product.id);
+    if (index >= 0) {
+      _items.removeWhere((p) => p.id == product.id);
       notifyListeners();
     }
   }
