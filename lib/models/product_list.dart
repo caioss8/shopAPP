@@ -3,13 +3,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shop/data/dummy_data.dart';
+import 'package:shop/exceptions/http_exceptions.dart';
 import 'package:shop/models/product.dart';
 
 class ProductList with ChangeNotifier {
-  final _url =
-      'https://shopapp-5dd80-default-rtdb.firebaseio.com/products.json';
-  List<Product> _items = dummyProducts;
+  final _Baseurl = 'https://shopapp-5dd80-default-rtdb.firebaseio.com/products';
+  List<Product> _items = [];
 
   List<Product> get items => [..._items];
   List<Product> get favoriteItems =>
@@ -35,7 +34,7 @@ class ProductList with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final response = await http.post(
-      Uri.parse(_url),
+      Uri.parse('$_Baseurl.json'),
       body: jsonEncode(
         {
           "name": product.name,
@@ -63,53 +62,65 @@ class ProductList with ChangeNotifier {
   }
 
   Future<void> loadProducts() async {
-    final response = await http.get(Uri.parse(_url));
-    print(jsonDecode(response.body));
+    _items.clear();
+    final response = await http.get(Uri.parse('$_Baseurl.json'));
+    if (response.body == 'null') return;
+    Map<String, dynamic> data = jsonDecode(response.body);
+    data.forEach((productId, productData) {
+      _items.add(
+        Product(
+          id: productId,
+          description: productData['description'],
+          imageUrl: productData['imageUrl'],
+          price: productData['price'],
+          name: productData['name'],
+          isFavorite: productData['isFavorite'],
+        ),
+      );
+    });
+    notifyListeners();
   }
 
-  Future<void> updateProduct(Product product) {
+  Future<void> updateProduct(Product product) async {
     int index = _items.indexWhere((p) => p.id == product.id);
+
     if (index >= 0) {
+      await http.patch(
+        Uri.parse('$_Baseurl/${product.id}.json'),
+        body: jsonEncode(
+          {
+            "name": product.name,
+            "description": product.description,
+            "price": product.price,
+            "imageUrl": product.imageUrl,
+          },
+        ),
+      );
       _items[index] = product;
       notifyListeners();
     }
-    return Future.value();
   }
 
-  void deleteProduct(Product product) {
+  Future<void> deleteProduct(Product product) async {
     int index = _items.indexWhere((p) => p.id == product.id);
+
     if (index >= 0) {
-      _items.removeWhere((p) => p.id == product.id);
+      final product = _items[index];
+      _items.remove(product);
       notifyListeners();
+
+      final response = await http.delete(
+        Uri.parse('$_Baseurl/${product.id}.json'),
+      );
+
+      if (response.statusCode >= 400) {
+        _items.insert(index, product);
+        notifyListeners();
+        throw HttpException(
+          msg: 'Não foi possivel excluir o produto!',
+          statusCode: response.statusCode,
+        );
+      }
     }
   }
 }
-
-
-// Outra Maneira de Gerenciar o Estado, marcando como favorito!!
-
-//  List<Product> _items = dummyProducts;
-//   bool _showFavoriteOnly = false;
-
-// List<Product> get items {
-//     if (_showFavoriteOnly) {
-//       return _items.where((prod) => prod.isFavorite).toList();
-//     }
-//     return [..._items];
-//   }
-
-//   void showFavoriteOnly() {
-//     _showFavoriteOnly = true;
-//     notifyListeners();
-//   }
-
-//   void showAll() {
-//     _showFavoriteOnly = false;
-//     notifyListeners();
-//   }
-
-//   void addProduct(Product product) {
-//     _items.add(product);
-//     notifyListeners();
-//   }
-// }
