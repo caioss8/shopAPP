@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           fontFamily: 'Lato',
-          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)
               .copyWith(secondary: Colors.deepOrange),
         ),
         routes: {

@@ -41,8 +41,8 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
     return Scaffold(
       drawer: AppDrawer(),
       appBar: AppBar(
-        title: Text('Minha Loja'),
-        centerTitle: false,
+        title: Text('ShopAPP'),
+        centerTitle: true,
         actions: [
           PopupMenuButton(
             itemBuilder: (_) => [
