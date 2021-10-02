@@ -10,7 +10,13 @@ class AppDrawer extends StatelessWidget {
       child: Column(
         children: [
           AppBar(
-            title: Text('Bem vindo Usuário!'),
+            title: Text(
+              'Olá Usuer',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             automaticallyImplyLeading: false,
           ),
           Divider(),
