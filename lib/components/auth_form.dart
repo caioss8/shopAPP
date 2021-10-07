@@ -13,12 +13,27 @@ void _submit() {}
 
 class _AuthFormState extends State<AuthForm> {
   AuthMode _authMode = AuthMode.Login;
+  final formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   Map<String, String> _authData = {
     'email': '',
     'password': '',
   };
+
+  bool _isLogin() => _authMode == AuthMode.Login;
+  bool _isSignip() => _authMode == AuthMode.Signup;
+
+  void _switchAuthMode() {
+    setState(() {
+      if (_isLogin()) {
+        _authMode = AuthMode.Signup;
+      } else {
+        _authMode = AuthMode.Login;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +45,12 @@ class _AuthFormState extends State<AuthForm> {
       elevation: 8,
       child: Container(
         padding: const EdgeInsets.all(16),
-        height: 320,
+        height: _isLogin() ? 340 : 400,
         width: sizePhone.width * 0.75,
         child: Column(
           children: [
             TextFormField(
+              key: formKey,
               decoration: InputDecoration(labelText: 'Email'),
               keyboardType: TextInputType.emailAddress,
               onSaved: (email) => _authData['email'] = email ?? '',
@@ -63,17 +79,19 @@ class _AuthFormState extends State<AuthForm> {
                           return null;
                         }
                       }),
-            if (_authMode == AuthMode.Signup)
+            if (_isSignip())
               TextFormField(
                 decoration: InputDecoration(labelText: 'Confirmar Senha'),
                 keyboardType: TextInputType.visiblePassword,
                 obscureText: true,
-                validator: (_password) {
-                  final password = _password ?? '';
-                  if (password != _passwordController.text) {
-                    return 'As senhas precisam ser iguais';
-                  }
-                },
+                validator: _isLogin()
+                    ? null
+                    : (_password) {
+                        final password = _password ?? '';
+                        if (password != _passwordController.text) {
+                          return 'As senhas precisam ser iguais';
+                        }
+                      },
               ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -89,6 +107,13 @@ class _AuthFormState extends State<AuthForm> {
                     horizontal: 30,
                     vertical: 8,
                   )),
+            ),
+            Spacer(),
+            TextButton(
+              onPressed: _switchAuthMode,
+              child: Text(
+                _isLogin() ? 'DESEJA REGISTRAR?' : 'JÁ POSSUI CONTA?',
+              ),
             ),
           ],
         ),
