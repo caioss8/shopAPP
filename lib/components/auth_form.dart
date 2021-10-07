@@ -12,18 +12,17 @@ class AuthForm extends StatefulWidget {
 }
 
 class _AuthFormState extends State<AuthForm> {
-  AuthMode _authMode = AuthMode.Login;
-  final formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
-
+  AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
     'email': '',
     'password': '',
   };
 
   bool _isLogin() => _authMode == AuthMode.Login;
-  bool _isSignip() => _authMode == AuthMode.Signup;
+  bool _isSignup() => _authMode == AuthMode.Signup;
 
   void _switchAuthMode() {
     setState(() {
@@ -36,7 +35,7 @@ class _AuthFormState extends State<AuthForm> {
   }
 
   Future<void> _submit() async {
-    final isValid = formKey.currentState?.validate() ?? false;
+    final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
       return;
@@ -44,105 +43,110 @@ class _AuthFormState extends State<AuthForm> {
 
     setState(() => _isLoading = true);
 
-    formKey.currentState?.save();
+    _formKey.currentState?.save();
     Auth auth = Provider.of(context, listen: false);
 
     if (_isLogin()) {
-      //login
+      //Login
     } else {
+      // Registrar
       await auth.signup(
         _authData['email']!,
         _authData['password']!,
       );
     }
 
-    setState(() => _isLoading = true);
+    setState(() => _isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
-    final sizePhone = MediaQuery.of(context).size;
+    final deviceSize = MediaQuery.of(context).size;
     return Card(
+      elevation: 8,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      elevation: 8,
       child: Container(
         padding: const EdgeInsets.all(16),
-        height: _isLogin() ? 340 : 380,
-        width: sizePhone.width * 0.75,
-        child: Column(
-          children: [
-            TextFormField(
-              key: formKey,
-              decoration: InputDecoration(labelText: 'Email'),
-              keyboardType: TextInputType.emailAddress,
-              onSaved: (email) => _authData['email'] = email ?? '',
-              validator: (_email) {
-                final email = _email ?? '';
-                if (email.trim().isEmpty || !email.contains('@')) {
-                  return 'Insira um email Valido!';
-                } else {
+        height: _isLogin() ? 310 : 400,
+        width: deviceSize.width * 0.75,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                style: TextStyle(color: Colors.black),
+                decoration: InputDecoration(labelText: 'E-mail'),
+                keyboardType: TextInputType.emailAddress,
+                onSaved: (email) => _authData['email'] = email ?? '',
+                validator: (_email) {
+                  final email = _email ?? '';
+                  if (email.trim().isEmpty || !email.contains('@')) {
+                    return 'Informe um e-mail válido.';
+                  }
                   return null;
-                }
-              },
-            ),
-            TextFormField(
+                },
+              ),
+              TextFormField(
+                style: TextStyle(color: Colors.black),
                 decoration: InputDecoration(labelText: 'Senha'),
-                keyboardType: TextInputType.visiblePassword,
+                keyboardType: TextInputType.emailAddress,
                 obscureText: true,
                 controller: _passwordController,
                 onSaved: (password) => _authData['password'] = password ?? '',
-                validator: _authMode == AuthMode.Login
-                    ? null
-                    : (_password) {
-                        final password = _password ?? '';
-                        if (password.isEmpty || password.length < 5) {
-                          return 'Insira uma senha Valida!';
-                        } else {
-                          return null;
-                        }
-                      }),
-            if (_isSignip())
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Confirmar Senha'),
-                keyboardType: TextInputType.visiblePassword,
-                obscureText: true,
-                validator: _isLogin()
-                    ? null
-                    : (_password) {
-                        final password = _password ?? '';
-                        if (password != _passwordController.text) {
-                          return 'As senhas precisam ser iguais';
-                        }
-                      },
+                validator: (_password) {
+                  final password = _password ?? '';
+                  if (password.isEmpty || password.length < 5) {
+                    return 'Informe uma senha válida';
+                  }
+                  return null;
+                },
               ),
-            const SizedBox(height: 20),
-            if (_isLoading)
-              CircularProgressIndicator()
-            else
-              ElevatedButton(
-                onPressed: _submit,
-                child: Text(
-                  _authMode == AuthMode.Login ? 'Entrar' : 'Resgistrar',
+              if (_isSignup())
+                TextFormField(
+                  style: TextStyle(color: Colors.black),
+                  decoration: InputDecoration(labelText: 'Confirmar Senha'),
+                  keyboardType: TextInputType.emailAddress,
+                  obscureText: true,
+                  validator: _isLogin()
+                      ? null
+                      : (_password) {
+                          final password = _password ?? '';
+                          if (password != _passwordController.text) {
+                            return 'Senhas informadas não conferem.';
+                          }
+                          return null;
+                        },
                 ),
-                style: ElevatedButton.styleFrom(
+              SizedBox(height: 20),
+              if (_isLoading)
+                CircularProgressIndicator()
+              else
+                ElevatedButton(
+                  onPressed: _submit,
+                  child: Text(
+                    _authMode == AuthMode.Login ? 'ENTRAR' : 'REGISTRAR',
+                  ),
+                  style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 30,
                       vertical: 8,
-                    )),
-              ),
-            Spacer(),
-            TextButton(
-              onPressed: _switchAuthMode,
-              child: Text(
-                _isLogin() ? 'DESEJA REGISTRAR?' : 'JÁ POSSUI CONTA?',
-              ),
-            ),
-          ],
+                    ),
+                  ),
+                ),
+              Spacer(),
+              TextButton(
+                onPressed: _switchAuthMode,
+                child: Text(
+                  _isLogin() ? 'DESEJA REGISTRAR?' : 'JÁ POSSUI CONTA?',
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
