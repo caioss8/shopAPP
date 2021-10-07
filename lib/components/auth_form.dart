@@ -9,8 +9,6 @@ class AuthForm extends StatefulWidget {
   _AuthFormState createState() => _AuthFormState();
 }
 
-void _submit() {}
-
 class _AuthFormState extends State<AuthForm> {
   AuthMode _authMode = AuthMode.Login;
   final formKey = GlobalKey<FormState>();
@@ -33,6 +31,26 @@ class _AuthFormState extends State<AuthForm> {
         _authMode = AuthMode.Login;
       }
     });
+  }
+
+  void _submit() {
+    final isValid = formKey.currentState?.validate() ?? false;
+
+    if (!isValid) {
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    formKey.currentState?.save();
+
+    if (_isLogin()) {
+      //login
+    } else {
+      //Registrar
+    }
+
+    setState(() => _isLoading = true);
   }
 
   @override
@@ -94,20 +112,23 @@ class _AuthFormState extends State<AuthForm> {
                       },
               ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _submit,
-              child: Text(
-                _authMode == AuthMode.Login ? 'Entrar' : 'Resgistrar',
+            if (_isLoading)
+              CircularProgressIndicator()
+            else
+              ElevatedButton(
+                onPressed: _submit,
+                child: Text(
+                  _authMode == AuthMode.Login ? 'Entrar' : 'Resgistrar',
+                ),
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 30,
+                      vertical: 8,
+                    )),
               ),
-              style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 8,
-                  )),
-            ),
             Spacer(),
             TextButton(
               onPressed: _switchAuthMode,
