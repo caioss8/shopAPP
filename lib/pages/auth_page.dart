@@ -28,7 +28,7 @@ class AuthPage extends StatelessWidget {
                     vertical: 10,
                     horizontal: 70,
                   ),
-                  transform: Matrix4.rotationZ(-8 * pi / 180),
+                  transform: Matrix4.rotationZ(-8 * pi / 180)..translate(-15.0),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.yellowAccent.shade700,
