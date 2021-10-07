@@ -36,10 +36,12 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-          fontFamily: 'Lato',
-          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)
-              .copyWith(secondary: Colors.deepOrange),
-        ),
+            fontFamily: 'Lato',
+            colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)
+                .copyWith(secondary: Colors.deepOrange),
+            textTheme: TextTheme(
+              headline6: TextStyle(color: Colors.black),
+            )),
         routes: {
           AppRoutes.AUTH: (ctx) => AuthPage(),
           AppRoutes.HOME: (ctx) => ProductsOverviewPage(),

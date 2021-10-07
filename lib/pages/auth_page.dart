@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatelessWidget {
@@ -18,7 +20,35 @@ class AuthPage extends StatelessWidget {
           Container(
             width: double.infinity,
             child: Column(
-              children: [],
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 70,
+                  ),
+                  transform: Matrix4.rotationZ(-8 * pi / 180),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.yellowAccent.shade700,
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 8,
+                          color: Colors.black26,
+                          offset: Offset(0, 2),
+                        )
+                      ]),
+                  child: Text(
+                    'MyShop',
+                    style: TextStyle(
+                      fontSize: 45,
+                      fontFamily: 'Anton',
+                      color: Theme.of(context).textTheme.headline6?.color,
+                    ),
+                  ),
+                )
+              ],
             ),
           )
         ],
