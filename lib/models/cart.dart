@@ -21,6 +21,7 @@ class Cart with ChangeNotifier {
     });
     return total;
   }
+  
 
   void addItem(Product product) {
     if (_items.containsKey(product.id)) {
