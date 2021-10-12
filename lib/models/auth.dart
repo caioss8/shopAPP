@@ -20,7 +20,7 @@ class Auth with ChangeNotifier {
   String? get email {
     return isAuth ? _email : null;
   }
-  String? get userID {
+  String? get userId {
     return isAuth ? _userId : null;
   }
 
