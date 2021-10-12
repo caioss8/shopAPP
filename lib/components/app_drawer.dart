@@ -26,7 +26,7 @@ class AppDrawer extends StatelessWidget {
             title: Text('Home'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(
-                AppRoutes.HOME,
+                AppRoutes.AUTH_OR_HOME,
               );
             },
           ),
