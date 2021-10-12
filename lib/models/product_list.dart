@@ -44,7 +44,6 @@ class ProductList with ChangeNotifier {
           "description": product.description,
           "price": product.price,
           "imageUrl": product.imageUrl,
-          "isFavorite": product.isFavorite,
         },
       ),
     );
@@ -55,7 +54,6 @@ class ProductList with ChangeNotifier {
       imageUrl: product.imageUrl,
       price: product.price,
       name: product.name,
-      isFavorite: product.isFavorite,
     ));
     notifyListeners();
   }
@@ -78,7 +76,6 @@ class ProductList with ChangeNotifier {
           imageUrl: productData['imageUrl'],
           price: productData['price'],
           name: productData['name'],
-          isFavorite: productData['isFavorite'],
         ),
       );
     });
