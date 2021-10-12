@@ -19,10 +19,16 @@ class CartPage extends StatelessWidget {
       ),
       body: Column(
         children: [
+          Text('*Arraste o produto para o lado para exclui-lo*',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey,
+          ),
+        ),
           Card(
             margin: const EdgeInsets.symmetric(
               horizontal: 10,
-              vertical: 15,
+              vertical: 10,
             ),
             child: Padding(
               padding: const EdgeInsets.all(10),
