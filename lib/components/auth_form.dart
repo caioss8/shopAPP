@@ -12,7 +12,8 @@ class AuthForm extends StatefulWidget {
   _AuthFormState createState() => _AuthFormState();
 }
 
-class _AuthFormState extends State<AuthForm> {
+class _AuthFormState extends State<AuthForm>
+    with SingleTickerProviderStateMixin {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
@@ -22,8 +23,31 @@ class _AuthFormState extends State<AuthForm> {
     'password': '',
   };
 
+  AnimationController? _controller;
+  Animation<Size>? _heightAnimation;
+
   bool _isLogin() => _authMode == AuthMode.Login;
   bool _isSignup() => _authMode == AuthMode.Signup;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: 300,
+      ),
+    );
+    _heightAnimation = Tween(
+      begin: Size(double.infinity, 310),
+      end: Size(double.infinity, 400),
+    ).animate(
+      CurvedAnimation(
+        parent: _controller!,
+        curve: Curves.linear,
+      ),
+    );
+  }
 
   void _switchAuthMode() {
     setState(() {
@@ -35,19 +59,20 @@ class _AuthFormState extends State<AuthForm> {
     });
   }
 
-  void _showErrorDialog(String msg){
-    showDialog(context: context,
-     builder: (ctx) => AlertDialog(
-       title: Text('Ocorreu um error'),
-       content: Text(msg),
-       actions: [
-         TextButton(
-           onPressed: () => Navigator.of(context).pop(),
-           child: Text('Fechar'),
-           ),
-       ],
-     ),
-     );
+  void _showErrorDialog(String msg) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Ocorreu um error'),
+        content: Text(msg),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Fechar'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _submit() async {
@@ -64,19 +89,19 @@ class _AuthFormState extends State<AuthForm> {
 
     try {
       if (_isLogin()) {
-      await auth.login(
-        _authData['email']!,
-        _authData['password']!,
-      );
-    } else {
-      await auth.signup(
-        _authData['email']!,
-        _authData['password']!,
-      );
-    }
-    } on AuthException catch(error){
+        await auth.login(
+          _authData['email']!,
+          _authData['password']!,
+        );
+      } else {
+        await auth.signup(
+          _authData['email']!,
+          _authData['password']!,
+        );
+      }
+    } on AuthException catch (error) {
       _showErrorDialog(error.toString());
-    } catch(error){
+    } catch (error) {
       _showErrorDialog('Ocorreu um erro desconhecido!');
     }
     setState(() => _isLoading = false);
