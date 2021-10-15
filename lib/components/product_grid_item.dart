@@ -16,10 +16,14 @@ class ProductGridItem extends StatelessWidget {
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
         child: GestureDetector(
-            child: Image.network(
-              product.imageUrl.toString(),
+          child: Hero(
+            tag: product.id,
+            child: FadeInImage(
+              placeholder: AssetImage('assets/images/produto.png'),
+              image: NetworkImage(product.imageUrl),
               fit: BoxFit.cover,
             ),
+          ),
             onTap: () {
               Navigator.of(context).pushNamed(
                 AppRoutes.PRODUCT_DETAIL,
