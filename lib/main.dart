@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/models/auth.dart';
@@ -12,6 +11,7 @@ import 'package:shop/pages/product_detail_page.dart';
 import 'package:shop/pages/product_form_page.dart';
 import 'package:shop/pages/product_page.dart';
 import 'package:shop/utils/app_routes.dart';
+import 'package:shop/utils/custom_routes.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,23 +27,22 @@ class MyApp extends StatelessWidget {
           create: (_) => Auth(),
         ),
         ChangeNotifierProxyProvider<Auth, ProductList>(
-          create: (_) => ProductList(),
-          update: (ctx, auth, previous){
-            return ProductList(
-              auth.token ?? '',
-              previous?.items ?? [],
-              auth.userId ?? '', 
-            );
-          }
-        ),
+            create: (_) => ProductList(),
+            update: (ctx, auth, previous) {
+              return ProductList(
+                auth.token ?? '',
+                previous?.items ?? [],
+                auth.userId ?? '',
+              );
+            }),
         ChangeNotifierProxyProvider<Auth, OrderList>(
           create: (_) => OrderList(),
-          update: (ctx, auth, previous){
+          update: (ctx, auth, previous) {
             return OrderList(
-            previous?.items ?? [],
-            auth.token ?? '',
-            auth.userId ?? '',
-        );
+              previous?.items ?? [],
+              auth.token ?? '',
+              auth.userId ?? '',
+            );
           },
         ),
         ChangeNotifierProvider(
@@ -54,12 +53,19 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-            fontFamily: 'Lato',
-            colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)
-                .copyWith(secondary: Colors.deepOrange),
-            textTheme: TextTheme(
-              headline6: TextStyle(color: Colors.black),
-            )),
+          fontFamily: 'Lato',
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)
+              .copyWith(secondary: Colors.deepOrange),
+          textTheme: TextTheme(
+            headline6: TextStyle(color: Colors.black),
+          ),
+          pageTransitionsTheme: PageTransitionsTheme(
+            builders: {
+              TargetPlatform.iOS: CustomPageTransitionsBuilder(),
+              TargetPlatform.android: CustomPageTransitionsBuilder(),
+            },
+          )
+        ),
         routes: {
           AppRoutes.AUTH_OR_HOME: (ctx) => AuthOrHomePage(),
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage(),
