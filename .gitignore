@@ -8,12 +8,14 @@
 .buildlog/
 .history
 .svn/
+lib/models/auth.dart
 
 # IntelliJ related
 *.iml
 *.ipr
 *.iws
 .idea/
+lib/models/auth.dart
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -30,18 +32,23 @@
 .pub-cache/
 .pub/
 /build/
+lib/models/auth.dart
 
 # Web related
 lib/generated_plugin_registrant.dart
+lib/models/auth.dart
 
 # Symbolication related
 app.*.symbols
+lib/models/auth.dart
 
 # Obfuscation related
 app.*.map.json
+lib/models/auth.dart
 
 # Android Studio will place build artifacts here
 /android/app/debug
 /android/app/profile
 /android/app/release
+lib/models/auth.dart
 lib/models/auth.dart

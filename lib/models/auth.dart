@@ -110,7 +110,7 @@ class Auth with ChangeNotifier {
     _logoutTimer?.cancel();
     _logoutTimer = null;
   }
-
+ 
   void _autoLogout() {
     _clearLogoutTimer();
     final timeToLogout = _expiryDate?.difference(DateTime.now()).inSeconds;
